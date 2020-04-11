@@ -73,7 +73,7 @@ def getAndPlayTrack():
 			fileName=os.getcwd() + "/" + files[x]
 			fileName=fileName.replace("\'","'\\''")
 			fileName=fileName.replace("\"","\"")
-			print("[%02d/%02d] Adding %s..." % (x-selection+1,len(files)-selection,fileName))
+			print("[%02d/%02d] Adding %s..." % (x-selection+1,len(files)-selection,files[x]))
 			os.system("rhythmbox-client --enqueue \'" + fileName + "\'")
 		print("Sending play command..."); os.system("rhythmbox-client --play")
 		print("Complete.")
