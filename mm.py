@@ -1,22 +1,26 @@
 ## PROVIDED WITH ABSOLUTELY NO WARRANTY OF ANY KIND ##
-
 validExtensions=[".mp3",".m4a",".wav",".wma",".aiff",".ogg"]
 import os
 import re
 
 def main():
+	level=0
 	while 1:
-		if (getArtistAlbum("Artist: ") == -1):
-			print("Starting over...")
-		elif (getArtistAlbum("Album: ") == -1):
-			os.chdir("..")
-			print("Starting over...")
-		elif (getAndPlayTrack() == -1):
-			os.chdir("..")
-			os.chdir("..")
-			print("Starting over...")
-		else:
-			break
+		if (level==0):
+			if (getArtistAlbum("Artist: ") != -1):
+				level=1
+		elif (level==1):
+			if (getArtistAlbum("Album: ") == -1):
+				level=0
+				os.chdir("..")
+			else:
+				level=2
+		elif (level==2):
+			if (getAndPlayTrack() == -1):
+				level=1
+				os.chdir("..")
+			else:
+				break
 
 def printValidExtensions():
 	for x in range(0, len(validExtensions)-2):
@@ -58,9 +62,9 @@ def getAndPlayTrack():
 	for i in range(0,len(files)): 
 		print("[%02d]   %s" % (i+1,files[i]))
 	if (len(files)==0):
-		print("Directory does not contain any of the following filetypes:"),
+		print("*  Directory does not contain any of the following filetypes:"),
 		printValidExtensions()
-		print("To modify this list, edit validExtensions[] at the top of this script.")
+		print("*  To modify this list, edit validExtensions[] at the top of this script.")
 	selection=getInteger(len(files))-1
 	if (selection==-2): #-1 minus 1
 		return(-1)
@@ -89,17 +93,20 @@ def isValidExtension(input):
 def getInteger(maxValInclusive):
 	while 1:
 		temp=raw_input("? ")
-		if (temp==".."):
+		if temp in ["..","back","k","h","up"]:
 			return(-1)
-		try:
-			val=int(temp)
-		except ValueError:
-			print("Invalid input")
-			continue
-		if (val > 0 and val <= maxValInclusive):
-			return(val)
+		elif temp in ["q","quit","exit","exit()","end"]:
+			exit()
 		else:
-			print("Invalid input")
-			continue
+			try:
+				val=int(temp)
+			except ValueError:
+				print("Invalid input")
+				continue
+			if (val > 0 and val <= maxValInclusive):
+				return(val)
+			else:
+				print("Invalid input")
+				continue
 
 main()
